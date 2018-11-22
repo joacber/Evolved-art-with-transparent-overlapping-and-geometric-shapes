@@ -93,22 +93,21 @@ def resize_image(input_image):
     :param input_image: jpg target image
     :return: resized jpg image
     """
-    global image_width, image_height
+    global image_width, image_height, image
     img = input_image
-    img_width = img.size[0]
-    img_height = img.size[1]
+    img_height, img_width, can = input_image.shape
     if img_width > img_height:
-        base_width = 400
+        base_width = 300
         width_percent = (base_width / float(img_width))
         height_size = int((float(img_height) * float(width_percent)))
-        img = img.resize((base_width, height_size), Image.ANTIALIAS)
-        return img
+        image = cv2.resize(img, (int(base_width), int(height_size)))
+        return image
     else:
-        base_height = 400
+        base_height = 300
         height_percent = (base_height / float(img_height))
         width_size = int((float(img_width * float(height_percent))))
-        img = img.resize((width_size, base_height), Image.ANTIALIAS)
-        return img
+        image = cv2.resize(img, (int(width_size), int(base_height)))
+        return image
 
 
 def relative_fitness(fitness, *args):
@@ -289,6 +288,8 @@ class StartPage(tk.Frame):
                                               variable=self.max_generation_var)
         self.max_generation_label.grid(row=6, column=2)
         self.max_generation_slider.grid(row=6, column=3)
+
+
         self.hybrid_soft_mutate_label = ttk.Label(self.top_box, text="Hybrid (Soft Mutation)")
         self.hybrid_soft_mutate_slider = tk.Scale(self.top_box, from_=0, to=10, resolution=1, orient="horizontal",
                                                   variable=self.hybrid_soft_mutation_var)
@@ -380,7 +381,7 @@ class StartPage(tk.Frame):
         """
 
     def web_image(self):
-        global new_image
+        global new_image, start_height, start_width
         # cap = cv2.VideoCapture(0)
         cap = cv2.VideoCapture(cv2.CAP_DSHOW)
         print('PRESS SPACE FOR CAPTURE')
@@ -403,6 +404,10 @@ class StartPage(tk.Frame):
         cap.release()
 
         self.opencv_image = frame
+        #   Resize if the image is too large
+        start_height, start_width, can = self.opencv_image.shape
+        if (start_width, start_height) > (400, 400):
+            self.opencv_image = resize_image(self.opencv_image)
         b, g, r = cv2.split(self.opencv_image)
         self.opencv_image_r_g_b = cv2.merge((r, g, b))
         self.pil_image = Image.fromarray(self.opencv_image_r_g_b)
@@ -414,7 +419,7 @@ class StartPage(tk.Frame):
         new_image = True
 
     def open_image(self):
-        global new_image, image_width, image_height
+        global new_image, image_width, image_height, start_height, start_width
         """
         Overwrite placeholder image
         Later we will pass this to evolution
@@ -426,6 +431,10 @@ class StartPage(tk.Frame):
         if self.target_image:
             #   Load image with opencv
             self.opencv_image = cv2.imread(self.target_image)
+            #   Resize if the image is too large
+            start_height, start_width, can = self.opencv_image.shape
+            if (start_width, start_height) > (400, 400):
+                self.opencv_image = resize_image(self.opencv_image)
             #   Blue, green and red channels from splitting
             b, g, r = cv2.split(self.opencv_image)
             #   Merge red, green and blue channels
@@ -433,9 +442,7 @@ class StartPage(tk.Frame):
             #   Load the same image with PIL
             self.pil_image = Image.fromarray(self.opencv_image_r_g_b)
             image_width, image_height = self.pil_image.size
-            #   Resize if the image is too large
-            if self.pil_image.size > (400, 400):
-                self.pil_image = resize_image(self.pil_image)
+
             #   Load PIL image as a TKInter photo image.
             self.tkinter_photo = ImageTk.PhotoImage(self.pil_image)
             #   storing object through reference (so it doesn't get garbage collected)
@@ -451,15 +458,17 @@ class StartPage(tk.Frame):
             mutation_probability, soft_mutate_rate, hybrid_soft_mutate, hybrid_medium_mutate, mutation_type, \
             alpha_limit, \
             number_of_types, crossover_mutation, gene_structure_rate, target_image_name, image, max_generation, radius_limit, \
-            thickness_limit, wanted_width, wanted_height, export_gif_button
+            thickness_limit, wanted_width, wanted_height, export_gif_button, image_width, image_height, start_height, start_width
         """
         Initialize algorithm parameters
         Go to Main Page
         """
-        global image_width, image_height
+
         if self.pil_image is None:
             self.target_image = "resources\\mona_lisa_crop.jpg"
             self.opencv_image = cv2.imread(self.target_image)
+            start_height, start_width, can = self.opencv_image.shape
+            image = self.opencv_image
             b, g, r = cv2.split(self.opencv_image)
             self.opencv_image_r_g_b = cv2.merge((r, g, b))
             self.pil_image = Image.fromarray(self.opencv_image_r_g_b)
@@ -472,7 +481,7 @@ class StartPage(tk.Frame):
             main_page.update()
             new_image = True
         # Population values
-        image = self.opencv_image
+        # image = self.opencv_image
         amount_of_parents = self.amount_of_parents_slider.get()
         children_per_parent = self.children_per_parent_slider.get()
         vertices = self.vertices_slider.get()  # number of vertices in hte polygon
@@ -489,7 +498,6 @@ class StartPage(tk.Frame):
         hybrid_medium_mutate = self.hybrid_medium_mutate_slider.get()
         max_generation = self.max_generation_slider.get()
         mutation_type = self.mutation_type_button.var.get()
-
         save_image_rate = self.save_rate_slider.get()
         crossover_mutation = self.crossover_mutation_button.var.get()
         gene_structure_rate = self.gene_structure_slider.get()
@@ -737,7 +745,7 @@ class MainPage(tk.Frame):
         Initialize algorithm parameters
         """
         global amount_of_parents, children_per_parent, save_image_rate, vertices, number_of_genes, shapes_ratio, \
-            mutation_probability, soft_mutate_rate, hybrid_mutate_ratio, mutation_type, alpha_limit, \
+            mutation_probability, soft_mutate_rate, hybrid_mutate_ratio, mutation_type, alpha_limit,  \
             number_of_types, crossmutate, target_image_name, image, running, new_image, stop_evolve, gene_structure_rate, \
             hybrid_medium_mutate, hybrid_soft_mutate, crossover_mutation, export_gif_button
 
@@ -752,7 +760,7 @@ class MainPage(tk.Frame):
                                  hybrid_medium_mutate=hybrid_medium_mutate,
                                  mutation_type=mutation_type, gene_structure_rate=gene_structure_rate,
                                  crossover_mutation=crossover_mutation,
-                                 export_gif_button=export_gif_button)
+                                 export_gif_button=export_gif_button, start_width=start_width, start_height=start_height)
             self.evolve.create_parents()
             self.evolve.logging()
             self.generation = 0
@@ -802,8 +810,6 @@ class MainPage(tk.Frame):
             b, g, r = cv2.split(self.evolve.parent_genome[0].image)
             self.opencv_image = cv2.merge((r, g, b))
             self.pil_image = Image.fromarray(self.opencv_image)
-            if self.pil_image.size > (400, 400):
-                self.pil_image = resize_image(self.pil_image)
             self.tkinter_photo = ImageTk.PhotoImage(self.pil_image)
             self.current_image_label.configure(image=self.tkinter_photo)
             self.update()
