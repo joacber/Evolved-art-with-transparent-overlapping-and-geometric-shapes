@@ -3,6 +3,8 @@ To run program, run the code below in the terminal.
 
 python .\evolutionaryart.py
 
+
+
 Appendix – Program Details:
 
 Programming language:	
