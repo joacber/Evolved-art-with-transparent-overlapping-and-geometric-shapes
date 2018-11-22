@@ -381,7 +381,7 @@ class StartPage(tk.Frame):
         """
 
     def web_image(self):
-        global new_image, start_height, start_width
+        global new_image, start_height, start_width, image
         # cap = cv2.VideoCapture(0)
         cap = cv2.VideoCapture(cv2.CAP_DSHOW)
         print('PRESS SPACE FOR CAPTURE')
@@ -416,9 +416,10 @@ class StartPage(tk.Frame):
         self.tkinter_photo = ImageTk.PhotoImage(self.pil_image)
         self.target_image_label.configure(image=self.tkinter_photo)
         self.target_image_label.image = self.tkinter_photo
+        new_image = True
         main_page.target_image_label.configure(image=self.tkinter_photo)
         main_page.update()
-        new_image = True
+
 
     def open_image(self):
         global new_image, image_width, image_height, start_height, start_width, image
@@ -453,9 +454,10 @@ class StartPage(tk.Frame):
             self.target_image_label.configure(image=self.tkinter_photo)
             self.target_image_label.image = self.tkinter_photo
             #   Upadate image on Main Page
+            new_image = True
             main_page.target_image_label.configure(image=self.tkinter_photo)
             main_page.update()
-            new_image = True
+
 
     def initialize_evolution(self):
         global new_image, amount_of_parents, children_per_parent, save_image_rate, vertices, number_of_genes, shapes_ratio, \
@@ -481,9 +483,10 @@ class StartPage(tk.Frame):
             #   storing object through reference (so it doesn't get garbage collected)
             self.target_image_label.configure(image=self.tkinter_photo)
             self.target_image_label.image = self.tkinter_photo
+            new_image = True
             main_page.target_image_label.configure(image=self.tkinter_photo)
             main_page.update()
-            new_image = True
+
         # Population values
         # image = self.opencv_image
         amount_of_parents = self.amount_of_parents_slider.get()
@@ -697,11 +700,12 @@ class MainPage(tk.Frame):
         Pause Loop
         Open Start Page
         """
-        global running
+        global running, stop_evolve
         running = False
         self.toggle_controls(running)
-        if self.evolve is None:
-            self.stop_button.configure(state='disabled')
+
+        stop_evolve = True
+        self.stop_button.configure(state='disabled')
         self.pause_button.configure(state='disabled')
         self.run_button.configure(state='normal')
         #   Switch Frame
@@ -712,11 +716,11 @@ class MainPage(tk.Frame):
         Pause Loop
         Open Statistics Page
         """
-        global running
+        global running, stop_evolve
         running = False
         self.toggle_controls(running)
-        if self.evolve is None:
-            self.stop_button.configure(state='disabled')
+        stop_evolve = True
+        self.stop_button.configure(state='disabled')
         self.pause_button.configure(state='disabled')
         self.run_button.configure(state='normal')
         #   Switch Frame
@@ -728,6 +732,7 @@ class MainPage(tk.Frame):
         """
         global stop_evolve
         stop_evolve = True
+        running = False
         self.toggle_controls(running)
         self.stop_button.configure(state='disabled')
         self.pause_button.configure(state='disabled')
