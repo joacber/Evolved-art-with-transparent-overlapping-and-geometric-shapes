@@ -3,11 +3,12 @@ To run program, run the code below in the terminal.
 
 python .\evolutionaryart.py
 
-Appendix – Program Details
-* Programming language:	
+Appendix – Program Details:
+
+Programming language:	
   * Python 3.7
-* Classes:
-  * Name:	Size:
+  
+Classes(Name and Size):
   * evolutionaryart.py	(996 lines)
   * evolve.py	(266 lines)
   * fitness.py	(33 lines)
