@@ -311,8 +311,8 @@ class StartPage(tk.Frame):
         self.crossover_mutation_button.var = self.crossover_mutation_var
         self.crossover_mutation_button.grid(row=5, column=5)
         #   Set initial controller values at start based on best results
-        self.amount_of_parents_slider.set(2)
-        self.children_per_parent_slider.set(8)
+        self.amount_of_parents_slider.set(1)
+        self.children_per_parent_slider.set(5)
         self.vertices_slider.set(8)
         self.polygons_slider.set(20)
         self.circles_slider.set(20)
