@@ -122,8 +122,8 @@ class Evolve:
         self.fit = Fitness(self.main_image, self.width, self.height)
         self.generation = 0
 
-        self.log_initial_state = "../%s/%s_initial_state.txt" % (self.output_folder, self.image_name)
-        self.log_fitness = "../%s/%s_fitness.csv" % (self.output_folder, self.image_name)
+        self.log_initial_state = "%s/%s_initial_state.txt" % (self.output_folder, self.image_name)
+        self.log_fitness = "%s/%s_fitness.csv" % (self.output_folder, self.image_name)
         self.t0 = time.process_time()
 
         self.images = []
@@ -153,19 +153,19 @@ class Evolve:
         # saving each image
         i = 1
         for genome in self.parent_genome:
-            cv2.imwrite("../%s/generation%s_parent%s_fitness%s.jpg" % (
+            cv2.imwrite("%s/generation%s_parent%s_fitness%s.jpg" % (
                 self.output_folder, self.generation, i, genome.fitness),
                         genome.image)
             i += 1
 
     def make_fin_image(self):
         self.parent_genome[0].make_fin_image()
-        cv2.imwrite("../%s/generation%s_parent%s_fitness%s_Fin.jpg" % (
+        cv2.imwrite("%s/generation%s_parent%s_fitness%s_Fin.jpg" % (
             self.output_folder, self.generation, 0, self.parent_genome[0].fitness),
                     self.parent_genome[0].fin_image)
     def make_gif(self):
         if self.gif_state:
-            imageio.mimsave("../%s/GIF.gif" % self.output_folder, self.images, fps=120)
+            imageio.mimsave("%s/GIF.gif" % self.output_folder, self.images, fps=120)
 
     def logging(self):
         #  Makes the directory output if it does not exist.
@@ -203,7 +203,7 @@ class Evolve:
 
         i = 1
         for genome in self.parent_genome:
-            cv2.imwrite("../%s/generation%s_parent%s_fitness%s.jpg" %
+            cv2.imwrite("%s/generation%s_parent%s_fitness%s.jpg" %
                         (self.output_folder, self.generation, i, genome.fitness), genome.image)
 
             i += 1
