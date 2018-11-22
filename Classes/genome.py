@@ -6,7 +6,7 @@ from Classes.gene import *
 class Genome:
 
     def __init__(self, vertices, number_of_genes, width, height, shapes_ratio, mutation_probability, soft_mutate_rate,
-                 fitness):
+                 fitness, start_width,start_height):
         self.soft_mutate_rate = soft_mutate_rate
         self.mutation_probability = mutation_probability
         self.vertices = vertices
@@ -21,8 +21,8 @@ class Genome:
         self.image = None
         self.fin_image = None
         self.blank_image = np.zeros((height, width, 3), np.uint8)  # A blank image for rendering process.
-        self.wanted_width = 600
-        self.wanted_height = int((self.height/self.width)*self.wanted_width)
+        self.wanted_width = start_width
+        self.wanted_height = start_height
 
     def generate_genome(self):
 
