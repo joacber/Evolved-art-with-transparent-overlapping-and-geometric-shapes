@@ -86,7 +86,7 @@ class Genome:
                 cv2.fillPoly(overlay, np.array([coordinates]), color)
             elif gene.__class__ == Circle:
                 x, y = gene.coordinates
-                coordinates = (int((x / self.width) * self.wanted_width), int((y / self.width) * self.wanted_height))
+                coordinates = (int((x / self.width) * self.wanted_width), int((y / self.height) * self.wanted_height))
                 radius = gene.radius
                 radius = int((radius / self.width) * self.wanted_width)
 
@@ -94,9 +94,9 @@ class Genome:
             else:
                 x, y = gene.coordinates
                 x_1, y_1 = gene.coordinates_to
-                coordinates = (int((x / self.width) * self.wanted_width), int((y / self.width) * self.wanted_height))
+                coordinates = (int((x / self.width) * self.wanted_width), int((y / self.height) * self.wanted_height))
                 coordinates_to = (
-                int((x_1 / self.width) * self.wanted_width), int((y_1 / self.width) * self.wanted_height))
+                int((x_1 / self.width) * self.wanted_width), int((y_1 / self.height) * self.wanted_height))
                 thickness = gene.thickness
                 thickness = (thickness / self.width)
                 thickness = int(thickness * self.wanted_width)
