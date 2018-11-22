@@ -1,5 +1,6 @@
 # Evolved-art-with-transparent-overlapping-and-geometric-shapes
-Evolved art with transparent, overlapping and geometric shapes
+To run program, run the code below in the terminal.
+python .\evolutionaryart.py
 
 Appendix – Program Details
 Programming language:	Python 3.7
