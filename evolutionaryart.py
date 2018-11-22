@@ -408,6 +408,8 @@ class StartPage(tk.Frame):
         start_height, start_width, can = self.opencv_image.shape
         if (start_width, start_height) > (400, 400):
             self.opencv_image = resize_image(self.opencv_image)
+        else:
+            image = self.opencv_image
         b, g, r = cv2.split(self.opencv_image)
         self.opencv_image_r_g_b = cv2.merge((r, g, b))
         self.pil_image = Image.fromarray(self.opencv_image_r_g_b)
@@ -419,7 +421,7 @@ class StartPage(tk.Frame):
         new_image = True
 
     def open_image(self):
-        global new_image, image_width, image_height, start_height, start_width
+        global new_image, image_width, image_height, start_height, start_width, image
         """
         Overwrite placeholder image
         Later we will pass this to evolution
@@ -435,6 +437,8 @@ class StartPage(tk.Frame):
             start_height, start_width, can = self.opencv_image.shape
             if (start_width, start_height) > (400, 400):
                 self.opencv_image = resize_image(self.opencv_image)
+            else:
+                image = self.opencv_image
             #   Blue, green and red channels from splitting
             b, g, r = cv2.split(self.opencv_image)
             #   Merge red, green and blue channels
