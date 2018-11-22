@@ -257,7 +257,7 @@ class StartPage(tk.Frame):
         self.save_image_rate_var = tk.IntVar()
         self.max_generation_var = tk.IntVar()
         self.alpha_limit_var = tk.DoubleVar()
-        self.stagnate_limit_var = tk.IntVar()
+
         self.hybrid_soft_mutation_var = tk.IntVar()
         self.hybrid_medium_mutation_var = tk.IntVar()
         self.mutation_type_var = tk.DoubleVar()
@@ -289,33 +289,27 @@ class StartPage(tk.Frame):
                                               variable=self.max_generation_var)
         self.max_generation_label.grid(row=6, column=2)
         self.max_generation_slider.grid(row=6, column=3)
-
-        self.stagnate_limit_label = ttk.Label(self.top_box, text="Stagnate Limit")
-        self.stagnate_limit_slider = tk.Scale(self.top_box, from_=100, to=1000, resolution=100, orient="horizontal",
-                                              variable=self.stagnate_limit_var)
-        self.stagnate_limit_label.grid(row=2, column=4)
-        self.stagnate_limit_slider.grid(row=2, column=5)
         self.hybrid_soft_mutate_label = ttk.Label(self.top_box, text="Hybrid (Soft Mutation)")
         self.hybrid_soft_mutate_slider = tk.Scale(self.top_box, from_=0, to=10, resolution=1, orient="horizontal",
                                                   variable=self.hybrid_soft_mutation_var)
         self.hybrid_medium_mutate_label = ttk.Label(self.top_box, text="Hybrid (Medium Mutation)")
         self.hybrid_medium_mutate_slider = tk.Scale(self.top_box, from_=0, to=10, resolution=1, orient="horizontal",
                                                     variable=self.hybrid_medium_mutation_var)
-        self.hybrid_soft_mutate_label.grid(row=3, column=4)
-        self.hybrid_soft_mutate_slider.grid(row=3, column=5)
-        self.hybrid_medium_mutate_label.grid(row=4, column=4)
-        self.hybrid_medium_mutate_slider.grid(row=4, column=5)
+        self.hybrid_soft_mutate_label.grid(row=2, column=4)
+        self.hybrid_soft_mutate_slider.grid(row=2, column=5)
+        self.hybrid_medium_mutate_label.grid(row=3, column=4)
+        self.hybrid_medium_mutate_slider.grid(row=3, column=5)
         self.mutation_type_button = ttk.Checkbutton(self.top_box, text="Chunk Mutation",
                                                     variable=self.mutation_type_var,
                                                     onvalue=True, offvalue=False)
         self.mutation_type_button.var = self.mutation_type_var
-        self.mutation_type_button.grid(row=5, column=5)
+        self.mutation_type_button.grid(row=4, column=5)
         self.crossover_mutation_button = ttk.Checkbutton(self.top_box, text="Crossover Mutation",
                                                          variable=self.crossover_mutation_var,
                                                          onvalue=True, offvalue=False,
                                                          command=self.crossover_mutation_func)
         self.crossover_mutation_button.var = self.crossover_mutation_var
-        self.crossover_mutation_button.grid(row=6, column=5)
+        self.crossover_mutation_button.grid(row=5, column=5)
         #   Set initial controller values at start based on best results
         self.amount_of_parents_slider.set(2)
         self.children_per_parent_slider.set(8)
@@ -455,7 +449,7 @@ class StartPage(tk.Frame):
     def initialize_evolution(self):
         global new_image, amount_of_parents, children_per_parent, save_image_rate, vertices, number_of_genes, shapes_ratio, \
             mutation_probability, soft_mutate_rate, hybrid_soft_mutate, hybrid_medium_mutate, mutation_type, \
-            alpha_limit, stagnate_limit, \
+            alpha_limit, \
             number_of_types, crossover_mutation, gene_structure_rate, target_image_name, image, max_generation, radius_limit, \
             thickness_limit, wanted_width, wanted_height, export_gif_button
         """
@@ -495,26 +489,14 @@ class StartPage(tk.Frame):
         hybrid_medium_mutate = self.hybrid_medium_mutate_slider.get()
         max_generation = self.max_generation_slider.get()
         mutation_type = self.mutation_type_button.var.get()
-        stagnate_limit = self.stagnate_limit_slider.get()
+
         save_image_rate = self.save_rate_slider.get()
         crossover_mutation = self.crossover_mutation_button.var.get()
         gene_structure_rate = self.gene_structure_slider.get()
         export_gif_button = self.export_gif_button.var.get()
         #   Path to standard image
         path, target_image_name = os.path.split(self.target_image)
-        '''
-        #   Old setters used before implementing TkInter variables
-        main_page.max_generation_slider.set(max_generation)
-        main_page.mutation_slider.set(mutation_probability)
-        main_page.gene_structure_slider.set(gene_structure_rate)
-        main_page.soft_mutation_slider.set(soft_mutate_rate)
-        main_page.save_rate_slider.set(save_image_rate)
 
-        main_page.stagnate_limit_slider.set(stagnate_limit)
-        main_page.hybrid_soft_mutate_slider.set(hybrid_soft_mutate)
-        main_page.hybrid_medium_mutate_slider.set(hybrid_medium_mutate)
-        main_page.mutation_type_button.var = self.mutation_type_button.var.get()
-        '''
         #   Switch Frame
         self.controller.show_frame(MainPage)
 
@@ -602,33 +584,29 @@ class MainPage(tk.Frame):
         self.save_rate_label.grid(row=6, column=0, sticky="w", columnspan=3)
         self.save_rate_slider.grid(row=6, column=3, sticky="e", columnspan=3)
 
-        self.stagnate_limit_label = ttk.Label(self.middle_box, text="Stagnate Limit", font=SMALL_FONT)
-        self.stagnate_limit_slider = tk.Scale(self.middle_box, from_=100, to=1000, resolution=100, orient="horizontal",
-                                              variable=start_page.stagnate_limit_var)
-        self.stagnate_limit_label.grid(row=7, column=0, sticky="w", columnspan=3)
-        self.stagnate_limit_slider.grid(row=7, column=3, sticky="e", columnspan=3)
+
         self.hybrid_soft_mutate_label = ttk.Label(self.middle_box, text="Hybrid (Soft Mutation)", font=SMALL_FONT)
         self.hybrid_soft_mutate_slider = tk.Scale(self.middle_box, from_=0, to=10, resolution=1, orient="horizontal",
                                                   variable=start_page.hybrid_soft_mutation_var)
-        self.hybrid_soft_mutate_label.grid(row=8, column=0, sticky="w", columnspan=3)
-        self.hybrid_soft_mutate_slider.grid(row=8, column=3, sticky="e", columnspan=3)
+        self.hybrid_soft_mutate_label.grid(row=7, column=0, sticky="w", columnspan=3)
+        self.hybrid_soft_mutate_slider.grid(row=7, column=3, sticky="e", columnspan=3)
         self.hybrid_medium_mutate_label = ttk.Label(self.middle_box, text="Hybrid (Medium Mutation)", font=SMALL_FONT)
         self.hybrid_medium_mutate_slider = tk.Scale(self.middle_box, from_=0, to=10, resolution=1, orient="horizontal",
                                                     variable=start_page.hybrid_medium_mutation_var)
-        self.hybrid_medium_mutate_label.grid(row=9, column=0, sticky="w", columnspan=3)
-        self.hybrid_medium_mutate_slider.grid(row=9, column=3, sticky="e", columnspan=3)
+        self.hybrid_medium_mutate_label.grid(row=8, column=0, sticky="w", columnspan=3)
+        self.hybrid_medium_mutate_slider.grid(row=8, column=3, sticky="e", columnspan=3)
 
         self.max_generation_label = ttk.Label(self.middle_box, text="Maximum Generations")
 
         self.max_generation_slider = tk.Scale(self.middle_box, from_=1000, to=100000, resolution=1000,
                                               orient="horizontal",
                                               variable=start_page.max_generation_var)
-        self.max_generation_label.grid(row=10, column=0, sticky="w", columnspan=3)
-        self.max_generation_slider.grid(row=10, column=3, sticky="e", columnspan=3)
+        self.max_generation_label.grid(row=9, column=0, sticky="w", columnspan=3)
+        self.max_generation_slider.grid(row=9, column=3, sticky="e", columnspan=3)
         self.mutation_type_button = ttk.Checkbutton(self.middle_box, text="Chunk Mutation",
                                                     variable=start_page.mutation_type_var)
         self.mutation_type_button.var = start_page.mutation_type_var.get()
-        self.mutation_type_button.grid(row=11, column=3, sticky="e")
+        self.mutation_type_button.grid(row=10, column=3, sticky="e")
         #   Give equal weight to every column and row
         #   Elements inside will allocate any required space within the frame(s)
         self.middle_box.rowconfigure(0, weight=1)
@@ -759,7 +737,7 @@ class MainPage(tk.Frame):
         Initialize algorithm parameters
         """
         global amount_of_parents, children_per_parent, save_image_rate, vertices, number_of_genes, shapes_ratio, \
-            mutation_probability, soft_mutate_rate, hybrid_mutate_ratio, mutation_type, alpha_limit, stagnate_limit, \
+            mutation_probability, soft_mutate_rate, hybrid_mutate_ratio, mutation_type, alpha_limit, \
             number_of_types, crossmutate, target_image_name, image, running, new_image, stop_evolve, gene_structure_rate, \
             hybrid_medium_mutate, hybrid_soft_mutate, crossover_mutation, export_gif_button
 
@@ -843,7 +821,6 @@ class MainPage(tk.Frame):
         self.evolve.gene_structure_rate = self.gene_structure_slider.get()
         self.evolve.soft_mutate_rate = self.soft_mutation_slider.get()
         self.evolve.save_image_rate = self.save_rate_slider.get()
-        self.evolve.stagnate_limit = self.stagnate_limit_slider.get()
         self.evolve.hybrid_soft_mutate_rate = self.hybrid_soft_mutate_slider.get()
         self.evolve.hybrid_medium_mutate_rate = self.hybrid_medium_mutate_slider.get()
         self.evolve.max_generation = self.max_generation_slider.get()
@@ -861,7 +838,6 @@ class MainPage(tk.Frame):
             self.gene_structure_slider.configure(state='disabled')
             self.soft_mutation_slider.configure(state='disabled')
             self.save_rate_slider.configure(state='disabled')
-            self.stagnate_limit_slider.configure(state='disabled')
             self.hybrid_medium_mutate_slider.configure(state='disabled')
             self.hybrid_soft_mutate_slider.configure(state='disabled')
             self.mutation_type_button.configure(state='disabled')
@@ -873,7 +849,6 @@ class MainPage(tk.Frame):
             self.gene_structure_slider.configure(state='normal')
             self.soft_mutation_slider.configure(state='normal')
             self.save_rate_slider.configure(state='normal')
-            self.stagnate_limit_slider.configure(state='normal')
             self.hybrid_medium_mutate_slider.configure(state='normal')
             self.hybrid_soft_mutate_slider.configure(state='normal')
             self.mutation_type_button.configure(state='normal')
