@@ -1,3 +1,5 @@
+Arxiv paper: https://arxiv.org/abs/1904.06110
+
 # Evolved-art-with-transparent-overlapping-and-geometric-shapes
 To run program, run the code below in the terminal.
 
