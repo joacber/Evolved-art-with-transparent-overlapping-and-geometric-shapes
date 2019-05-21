@@ -1,6 +1,9 @@
-Arxiv paper: https://arxiv.org/abs/1904.06110
 
 # Evolved-art-with-transparent-overlapping-and-geometric-shapes
+
+The revised paper submitted to the 2019 NAIS Annual Conference: https://arxiv.org/abs/1904.06110
+
+
 To run program, run the code below in the terminal.
 
 python .\evolutionaryart.py
